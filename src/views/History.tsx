@@ -1,7 +1,7 @@
 import {FC, useEffect, useState} from "react";
 import SubTable from "../components/Table";
 import {handleOpenDB, readLatestData} from "../store";
-import ActionButton from "../components/ActionButton";
+import ViewButton from "../components/ViewButton";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -43,7 +43,7 @@ const History: FC = () => {
                     width: 80,
                     name:"操作",
                     render(path, file) {
-                        return <ActionButton url={file.surl} file={file} icon="view"/>
+                        return <ViewButton url={file.surl} file={file} icon="view"/>
                     }
 
                 }

@@ -12,12 +12,12 @@ body {
     height: 14px;
 }
 
-.icon.upload-video-icon {
+.upload-video-icon {
     width: 64px;
     height: 64px;
 
 }
-.icon.loading-icon {
+.loading-icon {
     width: 256px;
     height: 256px;
 }

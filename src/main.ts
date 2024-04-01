@@ -8,6 +8,7 @@ import qs from "qs";
 
 const subPath = `${os.homedir()}/Documents/ThunderSub`
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ffmpegPath = require('ffmpeg-static').replace(
   'app.asar',
   'app.asar.unpacked'
@@ -20,6 +21,11 @@ const ffprobePath = require('ffprobe-static').path.replace(
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
+
+const instance = axios.create({
+  baseURL: 'http://subtitle.kankan.xunlei.com:8000/search.json/',
+  timeout: 1000 * 60 * 3
+})
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

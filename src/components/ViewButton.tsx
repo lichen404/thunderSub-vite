@@ -1,5 +1,7 @@
 import React, {FC, useState} from "react";
-import Icon from "./Icon";
+import DownloadIcon from "../assets/icons/download.svg";
+import LoadingIcon from "../assets/icons/loading.svg";
+import ViewIcon from "../assets/icons/view.svg";
 import {addData, handleOpenDB, updateData} from "../store";
 
 interface ButtonProps {
@@ -11,11 +13,17 @@ interface ButtonProps {
 const ViewButton: FC<ButtonProps> = ({url, file, icon = 'download'}) => {
     const [iconName, setIconName] = useState(icon)
     const [viewPath, setViewPath] = useState("")
+    const map = {
+        download: <DownloadIcon/>,
+        loading: <LoadingIcon/>,
+        view: <ViewIcon/>
+    }
+    
     return <button onClick={async () => {
 
         if (iconName === 'download') {
             setIconName('loading')
-            const path = await window.electron.ipcRenderer.invoke('download-sub', {
+            const path = await window.electron.invokeDownloadSub({
                 url,
                 name: `${file.sname}.${file.sext}`
             })
@@ -38,13 +46,13 @@ const ViewButton: FC<ButtonProps> = ({url, file, icon = 'download'}) => {
 
         }
         if (iconName === 'view') {
-            const result = await window.electron.ipcRenderer.invoke('open-explore', viewPath)
+            const result = await window.electron.invokeOpenExplore(viewPath)
             result || setIconName('download')
         }
 
 
     }
-    }><Icon name={iconName}/></button>
+    }>{map[iconName]}</button>
 }
 
 export default ViewButton;

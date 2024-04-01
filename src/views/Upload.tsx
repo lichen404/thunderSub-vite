@@ -1,10 +1,9 @@
 import React, {useContext, useState} from 'react';
 import styled from "styled-components";
-
+import UploadIcon from '../assets/icons/upload-video.svg';
+import LoadingIcon from '../assets/icons/loading.svg';
 import {useNavigate} from "react-router-dom";
 import {Context} from "../context";
-import Icon from "../components/Icon";
-import {handleOpenDB} from "../store";
 
 
 const Wrapper = styled.div`
@@ -12,7 +11,6 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-
 `
 const UploadWrapper = styled.div`
   min-width: 256px;
@@ -71,11 +69,12 @@ const Upload: React.FC = () => {
         }
         setIsLoading(true)
 
-        const data = await window.electron.ipcRenderer.invoke('upload-file', payload).catch(e => {
+        const data = await window.electron.invokeUploadFile(payload).catch(e => {
             console.log(e)
         })
         if (data) {
             setIsLoading(false)
+            console.log(data.sublist)
             e.target.value = null
             setFileList(data.sublist.filter(((sub: any) => sub.surl)))
             navigate(`/${payload.videoName}/list`)
@@ -85,14 +84,14 @@ const Upload: React.FC = () => {
     return (
 
         <Wrapper>
-            {isLoading && <Shadow><Icon name="loading" className="loading-icon"/></Shadow>}
+            {isLoading && <Shadow><LoadingIcon className="loading-icon"/></Shadow>}
             {isSidebarVisible && <SideBarShadow/>}
             <UploadWrapper>
                 <label onDrop={handleUpload} onDragOver={
                     (e) => {
                         e.preventDefault();
                     }
-                }><Icon name="upload-video" className="upload-video-icon"/>
+                }><UploadIcon name="upload-video" className="upload-video-icon"/>
                     <span>将视频文件拖拽至此，或点击选择</span>
                     <input type="file" onChange={
                         handleUpload

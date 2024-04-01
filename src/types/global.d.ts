@@ -12,6 +12,9 @@ declare global {
             closeWindow:()=>void;
             fixedWindow:(isFixed:boolean)=>void;
             onResponse:(channel:any, listener:any)=>void;
+            invokeUploadFile:(payload:any)=>Promise<any>;
+            invokeDownloadSub:(payload:any)=>Promise<any>;
+            invokeOpenExplore:(payload:any)=>Promise<any>;
         };
     }
 }
