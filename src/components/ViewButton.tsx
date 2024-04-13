@@ -12,7 +12,7 @@ interface ButtonProps {
 
 const ViewButton: FC<ButtonProps> = ({url, file, icon = 'download'}) => {
     const [iconName, setIconName] = useState(icon)
-    const [viewPath, setViewPath] = useState("")
+    const [viewPath, setViewPath] = useState(file.path || '')
     const map = {
         download: <DownloadIcon/>,
         loading: <LoadingIcon/>,

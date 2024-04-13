@@ -62,7 +62,7 @@ const Upload: React.FC = () => {
 
 
     const handleUpload = async (e: any) => {
-
+        e.preventDefault()
         const payload = {
             videoName: e.dataTransfer?.files[0].name || e.target.files[0].name,
             videoPath: e.dataTransfer?.files[0].path || e.target.files[0].path
@@ -70,11 +70,11 @@ const Upload: React.FC = () => {
         setIsLoading(true)
 
         const data = await window.electron.invokeUploadFile(payload).catch(e => {
-            console.log(e)
+            window.alert(e)
+            setIsLoading(false)
         })
         if (data) {
             setIsLoading(false)
-            console.log(data.sublist)
             e.target.value = null
             setFileList(data.sublist.filter(((sub: any) => sub.surl)))
             navigate(`/${payload.videoName}/list`)
