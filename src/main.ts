@@ -53,7 +53,9 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if(process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools();
+  }
 
   ipcMain.handle('upload-file', async (event, payload) => {
     const videoLength = await new Promise((resolve, reject) => {
