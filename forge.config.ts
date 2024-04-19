@@ -13,9 +13,11 @@ const config: ForgeConfig = {
     asar:{
       unpackDir:path.join('**', '{node_modules/ffmpeg-static,node_modules/ffprobe-static}', '**', '*'),
     },
+    icon: path.join(__dirname,'src/assets/icons/icon')
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [new MakerSquirrel({
+  }), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.

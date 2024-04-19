@@ -40,8 +40,6 @@ jobs:
             with:
               name: ${{ matrix.os }}
               path: out/make
-#          - name: zip release
-#            run: Compress-Archive -Path out/thundersub-win32-x64/* -Destination windows-latest.zip
           - name: release
             uses: softprops/action-gh-release@v1
             if: startsWith(github.ref, 'refs/tags/')
