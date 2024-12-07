@@ -2,7 +2,7 @@ import {FC, useEffect, useState} from "react";
 import SubTable from "../components/Table";
 import {handleOpenDB, readLatestData} from "../store";
 import ViewButton from "../components/ViewButton";
-import styled from "styled-components";
+import {styled} from "styled-components";
 
 const Wrapper = styled.div`
   overflow: auto hidden;

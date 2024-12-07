@@ -1,5 +1,5 @@
 import {FC, PropsWithChildren} from "react";
-import styled from "styled-components";
+import {styled} from "styled-components";
 
 import SideBar from "./SideBar";
 

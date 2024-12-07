@@ -2,7 +2,7 @@ import React, {FC, useContext} from "react";
 import {Context} from "../context";
 import SubTable from "../components/Table";
 
-import styled from "styled-components";
+import {styled} from "styled-components";
 
 import ViewButton from "../components/ViewButton";
 

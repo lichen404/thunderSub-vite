@@ -2,8 +2,8 @@ import {MutableRefObject, useEffect, useRef} from "react";
 
 type fn<T> = (callback:(event:MouseEvent)=>void)=>MutableRefObject<T>
 
-export const useOutSideClick:fn<any> = (callback) => {
-    const ref = useRef<any>()
+export const useOutSideClick:fn<HTMLElement> = (callback) => {
+    const ref = useRef<HTMLElement>()
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             const nav = document.querySelector('nav')

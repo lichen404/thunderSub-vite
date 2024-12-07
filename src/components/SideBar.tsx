@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect } from "react";
-import styled from "styled-components";
+import {styled} from "styled-components";
 import { NavLink } from "react-router-dom";
 import MenuOffIcon from "../assets/icons/menu-off.svg";
 import { Context } from "../context";

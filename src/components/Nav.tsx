@@ -6,7 +6,7 @@ import MinusIcon from "../assets/icons/minus.svg";
 import FixIcon from "../assets/icons/fixed.svg";
 import RestoreIcon from '../assets/icons/restore.svg'
 import {Context} from "../context";
-import styled from "styled-components";
+import {styled} from "styled-components";
 
 
 

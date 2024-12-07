@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import styled from "styled-components";
+import {styled} from "styled-components";
 import UploadIcon from '../assets/icons/upload-video.svg';
 import LoadingIcon from '../assets/icons/loading.svg';
 import {useNavigate} from "react-router-dom";
