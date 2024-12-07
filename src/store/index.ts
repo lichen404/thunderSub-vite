@@ -18,7 +18,7 @@ export const handleOpenDB = (databaseName: string, storeName: string, version = 
             db = request.result
 
             if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStore(storeName, {keyPath: "surl"})
+                db.createObjectStore(storeName, {keyPath: "url"})
             }
         };
     });

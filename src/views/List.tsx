@@ -7,18 +7,16 @@ import {styled} from "styled-components";
 import ViewButton from "../components/ViewButton";
 
 const Wrapper = styled.div`
-  overflow: auto hidden;
-
+  max-height:calc(100vh - 28.5px);
+  overflow-y: auto;
   button {
     cursor: pointer;
     background-color: #2c2a38;
-
     > svg {
       width: 24px;
       height: 24px;
     }
   }
-
 `
 
 const List: FC = () => {
@@ -30,30 +28,25 @@ const List: FC = () => {
             <SubTable columns={
                 [
                     {
-                        dataIndex: "sname",
+                        dataIndex: "name",
                         name: "名称",
 
                     },
                     {
-                        dataIndex: "language",
+                        dataIndex: "languages",
                         name: "语言",
-                        width: 180
+                        width: 180,
+                        render(languages) {
+                            return languages.join(",")
+                        }
                     },
                     {
-                        dataIndex: "simility",
-                        name: "匹配度",
-                        render(value) {
-                            return `${value * 100}%`
-                        },
-                        width: 160
-                    },
-                    {
-                        dataIndex: "sext",
+                        dataIndex: "ext",
                         name: "类型",
                         width: 100
                     },
                     {
-                        dataIndex: 'surl',
+                        dataIndex: 'url',
                         width: 80,
                         render(url, file) {
                             return <ViewButton url={url} file={file}/>

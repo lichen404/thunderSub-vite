@@ -43,7 +43,7 @@ const History: FC = () => {
                     width: 80,
                     name:"操作",
                     render(path, file) {
-                        return <ViewButton url={file.surl} file={file} icon="view"/>
+                        return <ViewButton url={file.url} file={file} icon="view"/>
                     }
 
                 }

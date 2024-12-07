@@ -4,6 +4,7 @@ import UploadIcon from '../assets/icons/upload-video.svg';
 import LoadingIcon from '../assets/icons/loading.svg';
 import {useNavigate} from "react-router-dom";
 import {Context} from "../context";
+import type { Sub } from '../types/sub';
 
 
 const Wrapper = styled.div`
@@ -69,14 +70,14 @@ const Upload: React.FC = () => {
         }
         setIsLoading(true)
 
-        const data = await window.electron.invokeUploadFile(payload).catch(e => {
-            window.alert(e)
+        const res = await window.electron.invokeUploadFile(payload).catch(e => {
+            console.log(e)
             setIsLoading(false)
         })
-        if (data) {
+        if (res) {
             setIsLoading(false)
             e.target.value = null
-            setFileList(data.sublist.filter(((sub: any) => sub.surl)))
+            setFileList(res.data.filter(((sub: Sub) => sub.url)))
             navigate(`/${payload.videoName}/list`)
         }
 

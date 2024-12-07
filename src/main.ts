@@ -1,10 +1,10 @@
-import {app, BrowserWindow, ipcMain, shell} from 'electron';
-import ffmpeg, {ffprobe} from 'fluent-ffmpeg'
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import ffmpeg, { ffprobe } from 'fluent-ffmpeg'
 import axios from "axios";
 import os from 'os';
 import path from "path";
 import fs from "fs";
-import qs from "qs";
+import { gcidHashFile, cidHashFile } from './libs/hash';
 
 const subPath = `${os.homedir()}/Documents/ThunderSub`
 
@@ -23,7 +23,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
 const instance = axios.create({
-  baseURL: 'http://subtitle.kankan.xunlei.com:8000/search.json/',
+  baseURL: 'http://api-shoulei-ssl.xunlei.com/',
   timeout: 1000 * 60 * 3
 })
 
@@ -38,10 +38,10 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    frame:false,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      contextIsolation:true
+      contextIsolation: true
     },
   });
 
@@ -53,91 +53,98 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  if(process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
   }
 
   ipcMain.handle('upload-file', async (event, payload) => {
+    const videoPath = process.platform === 'win32' ? payload.videoPath.replace(/\\/g, '/') : payload.videoPath
     const videoLength = await new Promise((resolve, reject) => {
-        const videoPath = process.platform === 'win32' ? payload.videoPath.replace(/\\/g, '/') : payload.videoPath
-        ffprobe(videoPath, (error: any, metadata: any) => {
-            error ? reject(error) : resolve(metadata.format.duration);
-        })
+      ffprobe(videoPath, (error: any, metadata: any) => {
+        error ? reject(error) : resolve(metadata.format.duration);
+      })
     })
-
+    const hashPayload = await new Promise<{ cidHash: string, gcidHash: string }>((resolve) => cidHashFile(videoPath, (cidHash) => {
+      gcidHashFile(videoPath, gcidHash => resolve({ cidHash, gcidHash }))
+    }))
     try {
-        const {data} = await instance.get(
-            qs.stringify({
-                mname: payload.videoName,
-                videolength: (parseFloat(videoLength as string) * 1000).toString()
-            })
-        )
-        return data
+      const { data } = await instance.get('oracle/subtitle',
+        {
+          params: {
+            name: payload.videoName,
+            cid: hashPayload.cidHash,
+            gcid: hashPayload.gcidHash,
+            duration: (parseFloat(videoLength as string) * 1000).toString()
+          }
+
+        }
+      )
+      return data
     } catch (error) {
-        console.log(error)
-        return Promise.reject(error)
+      console.log(error)
+      return Promise.reject(error)
     }
 
 
-})
+  })
 
 
-ipcMain.handle('download-sub', async (event, {name, url}: { name: string, url: string }) => {
+  ipcMain.handle('download-sub', async (event, { name, url }: { name: string, url: string }) => {
     if (!fs.existsSync(subPath)) {
-        fs.mkdirSync(subPath);
+      fs.mkdirSync(subPath);
     }
     if (url) {
-        const myPath = path.resolve(subPath, name);
-        const writer = fs.createWriteStream(myPath);
-        const response = await axios.get(url, {
-            responseType: 'stream'
-        })
-        response.data.pipe(writer);
-        return new Promise((resolve, reject) => {
+      const myPath = path.resolve(subPath, name);
+      const writer = fs.createWriteStream(myPath);
+      const response = await axios.get(url, {
+        responseType: 'stream'
+      })
+      response.data.pipe(writer);
+      return new Promise((resolve, reject) => {
 
-            writer.on('finish', () => resolve(myPath))
-            writer.on('error', () => reject())
+        writer.on('finish', () => resolve(myPath))
+        writer.on('error', () => reject())
 
-        })
+      })
 
     }
-})
+  })
 
-ipcMain.handle('open-explore', (event, filePath) => {
-    if(fs.existsSync(filePath)){
-        shell.showItemInFolder(filePath)
-        return true
+  ipcMain.handle('open-explore', (event, filePath) => {
+    if (fs.existsSync(filePath)) {
+      shell.showItemInFolder(filePath)
+      return true
 
     }
     return false
 
-})
+  })
 
-ipcMain.on('close-window', () => {
+  ipcMain.on('close-window', () => {
     mainWindow.close()
-})
+  })
 
-ipcMain.on('maximize-window', () => {
+  ipcMain.on('maximize-window', () => {
 
 
     mainWindow.maximize()
 
-})
+  })
 
 
   ipcMain.on('fixed-window', (event, isFixed: boolean) => {
     mainWindow.setAlwaysOnTop(isFixed)
   })
-  
+
   ipcMain.on('resize-window', () => {
     mainWindow.restore()
   })
-  
+
   ipcMain.on('minimize-window', () => {
-  
+
     mainWindow.minimize()
   })
-  
+
 };
 
 // This method will be called when Electron has finished

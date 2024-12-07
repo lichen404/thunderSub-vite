@@ -25,17 +25,17 @@ const ViewButton: FC<ButtonProps> = ({url, file, icon = 'download'}) => {
             setIconName('loading')
             const path = await window.electron.invokeDownloadSub({
                 url,
-                name: `${file.sname}.${file.sext}`
+                name: `${file.name}.${file.ext}`
             })
             const db = await handleOpenDB('history', 'movieStore')
 
             await addData(db, 'movieStore', {
-                name: `${file.sname}.${file.sext}`,
+                name: `${file.name}.${file.ext}`,
                 path,
                 ...file
             }).catch(() => {
                 updateData(db, 'movieStore', {
-                    name: `${file.sname}.${file.sext}`,
+                    name: `${file.name}.${file.ext}`,
                     path,
                     ...file
                 })
